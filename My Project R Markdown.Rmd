@@ -1,0 +1,126 @@
+---
+title: "MUHIRE Edmond Project"
+author: "MUHIRE Edmond"
+date: "`r Sys.Date()`"
+output: html_document
+---
+# THE PROJECT ASSIGNMENT OF STATISTICAL COMPUTING (SECTION 1)
+# QUESTION 1: HEALTHCARE ANALYTICS
+```{r}
+library(foreign)
+library(readxl)
+library(haven)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(raster)
+library(tidyverse)
+```
+# a) Reading and Understanding the Dataset.
+# i. Read or import NHANES dataset in R.
+```{r}
+NHANES<-read.csv("C:/Users/USER/Desktop/Project/Dataset for R/NHANES.csv")
+NHANES
+View(NHANES)
+```
+# ii. How many variables in the dataset? What are the names of the variables in the dataset?
+```{r}
+# Number of variables in the data set.
+Number_of_variables<-ncol(NHANES)
+Number_of_variables
+```
+```{r}
+# Names of variables in the data set.
+Name_of_variables<-names(NHANES)
+Name_of_variables
+```
+# iii. Select following column number 3, 4, 1, 7,9,10,12,14,15,16,35,40,46.
+```{r}
+# Selecting the columns
+Select_columns<-NHANES[,c(3, 4, 1, 7,9,10,12,14,15,16,35,40,46)]
+Select_columns
+```
+# iv. What data types are associated with each variable selected?
+```{r}
+str(Select_columns)
+```
+# v. Provide the numerical and categorical variables in the dataset
+```{r}
+#Numerical variables in the data set
+Numerical_variables<-sapply(NHANES, function(x) is.numeric(x))
+Numerical_variables_only<-NHANES[,Numerical_variables]
+Numerical_variables_only
+```
+```{r}
+#Categorical variables in the data set
+categorical_variables<-sapply(NHANES, function(x) is.character(x))
+categorical_variables_only<-NHANES[,categorical_variables]
+categorical_variables_only
+```
+# vi. Provide summary statistics for numerical variables (mean, median, standard deviation)
+```{r}
+#Mean of numeric variables
+X<-colMeans(Numerical_variables_only, na.rm=TRUE)
+X
+```
+```{r}
+#Median of numeric variables
+Y<-apply(Numerical_variables_only,2,median, na.rm=TRUE)
+Y
+#The means and the medians are almost equal so the data are normal distributed.
+```
+```{r}
+#Standard deviation of numeric variables
+Z<-apply(Numerical_variables_only,2,sd,na.rm=TRUE)
+Z
+```
+# vii. Are there any missing values and duplicates in the dataset, and if so, how many?
+```{r}
+#Showing if there are the missing values
+any_missing_value<-any(is.na(NHANES))
+any_missing_value
+if (any_missing_value){print("There are the missing values")} else {print("There are no missing values")}
+```
+```{r}
+# Number of missing values
+Number_of_missing_values<-sum(is.na(NHANES))
+Number_of_missing_values
+```
+```{r}
+#Showing if there are the duplicates in data set
+Any_duplicate<-any(duplicated(NHANES))
+Any_duplicate
+if (Any_duplicate){print("There are duplicates")} else {print("There are no dupilcates")}
+```
+```{r}
+#Number of duplicates in the data set
+Number_of_duplicates<-sum(duplicated(NHANES))
+Number_of_duplicates
+```
+# viii. Visualize outliers in Age using boxplot. (remember to set limit if your limits are too large)
+```{r}
+boxplot(NHANES$Age, main = "Boxplot of Age", ylab = "Age",ylim = c(0, 110),col = "green")
+```
+#b) Data Cleaning, manipulation and Exploratory Data Analysis.
+#i. Fill the missing values in the ' TotChol' column by zero (0) and check again if there is no missing in that column
+```{r}
+#Filling the missing values in the "Totchol" column by zero (0)
+NHANES$TotChol[is.na(NHANES$TotChol)]<-0
+NHANES$TotChol[is.na(NHANES$TotChol)]
+```
+```{r}
+#Checking again if there is no missing in the column
+any_missing_after_filling<-any(is.na(NHANES$TotChol))
+any_missing_after_filling
+#Using if else condition to show there is no missing value
+if (any_missing_after_filling) {print("There is missing vale")} else {print ("There is no missing values")}
+```
+# ii. Remove all duplicated identified if any and check again if no duplicates
+```{r}
+#Showing if there the duplicates
+any_duplicates_before_removal<-any(duplicated(NHANES))
+any_duplicates_before_removal
+
+#Using the if else condition to show if duplicates are present
+if (any_duplicates_before_removal) {print("There are the duplicates")} else {print("There are no duplicates")}
+```
